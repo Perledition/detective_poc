@@ -1,0 +1,312 @@
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+      <!-- reference your copy Font Awesome here (from our Kits or by hosting yourself) -->
+    <script src="https://use.fontawesome.com/releases/v5.9.0/js/all.js" data-auto-replace-svg="nest"></script>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+
+    <!-- style for add Graph Button -->
+    <style>
+      a#addGraph{
+        border: none;
+        color: #ccc;
+        background-color: #fff;
+        text-color: #fff;
+
+      }
+
+      a#addGraph:hover{
+        color: #e6205b;
+      }
+    </style>
+
+    <!-- style for loader -->
+    <style>
+      /* Center the loader */
+      #loader {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        z-index: 1;
+        width: 150px;
+        height: 150px;
+        margin: -75px 0 0 -75px;
+        border: 6px solid #f3f3f3;
+        border-radius: 50%;
+        border-top: 6px solid #e6205b;
+        width: 15px;
+        height: 15px;
+        -webkit-animation: spin 2s linear infinite;
+        animation: spin 2s linear infinite;
+      }
+
+      @-webkit-keyframes spin {
+        0% { -webkit-transform: rotate(0deg); }
+        100% { -webkit-transform: rotate(360deg); }
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+      /* Add animation to "page content" */
+      .animate-bottom {
+        position: relative;
+        -webkit-animation-name: animatebottom;
+        -webkit-animation-duration: 1s;
+        animation-name: animatebottom;
+        animation-duration: 1s
+      }
+
+      @-webkit-keyframes animatebottom {
+        from { bottom:-100px; opacity:0 }
+        to { bottom:0px; opacity:1 }
+      }
+
+      @keyframes animatebottom {
+        from{ bottom:-100px; opacity:0 }
+        to{ bottom:0; opacity:1 }
+      }
+
+      #myDiv {
+        display: none;
+      }
+    </style>
+
+    <!-- style for delete Button -->
+    <style>
+      #delete_btn{
+        color: #ccc;
+      }
+
+      #delete_btn:hover{
+        color: #e6205b;
+      }
+    </style>
+
+    <title>detective</title>
+  </head>
+  <body>
+    <h1 class="container-fluid float-center p-5 text-center" style="Comic Sans MS">
+      <img src="/Users/maximperl/Downloads/aa33e306f062a5d1c587a6fa458bc4db--fingerprints-brand-identity.jpg" alt="Logo" width="100" height="80">
+      detective</h1>
+    <div class="container-fluid align-items-center flex-column mb-3 p-2">
+      <div class="container input-group mb-3 p-2 align-items-center float-center mx-auto" id="loading_section">
+        <input type="text" id="api-url" class="form-control" placeholder="api-url" aria-label="api url" aria-describedby="basic-addon2">
+        <div class="input-group-append">
+          <button class="btn btn-outline-danger" type="button" onclick="api_call()">Load Data</button>
+        </div>
+      </div>
+      <div id="GraphBox" class="container col-10 mb-3 p-2 align-items-center float-center mx-auto"></div>
+      <div class="container col-5 mb-3 p-2 align-items-center float-center mx-auto">
+          <a class="row align-items-center text-center float-center" id="addGraph" onclick="GraphGenerator()">
+            <span class="col" style="border: 2px solid; height:0;"></span>
+              <i class="col fas fa-plus-circle"></i>
+            <span class="col" style="border: 2px solid; height:0;"></span>
+          </a>
+      </div>
+    </div>
+
+
+    <!-- global variable -->
+    <script type="text/javascript">
+      var data;
+    </script>
+
+    <!-- get all columns in data -->
+    <script type="text/javascript">
+      function column_mapper(id_number){
+
+        // variables to reach the columns
+        var index = Object.keys(data);
+
+        // drop downs to request
+        var x_select = document.getElementById("x_axis_"+id_number);
+        var y_select = document.getElementById("y_axis_"+id_number);
+
+        // append option to drop down based on data keys
+        for (index in data) {
+          x_select.options[x_select.options.length] = new Option(index, index);
+          y_select.options[y_select.options.length] = new Option(index, index);
+        }
+      }
+    </script>
+
+    <!-- This Script creates a new Box with a Chart in it -->
+    <script type="text/javascript">
+        function GraphGenerator() {
+
+             // generate id by generating a random number
+             var id = '_' + Math.random().toString(36).substr(2, 9)
+
+
+             // define the html template upfront
+             var markup = `<div class="container mb-2 align-items-center text-center float-center" id="card_${id}">
+
+                              <div class="card">
+                                <div class="row">
+                                  <div class="container-fluid">
+                                    <div contenteditable="true" class="float-left m-2" style="text-family:arial; font-size: 1.5rem;">Enter a Headline</div>
+                                    <!-- define delete icon -->
+                                    <a class="float-right p-2" onclick="delete_graph('${id}')" id="delete_btn"><i class="fas fa-times"></i></a>
+                                  </div>
+                                </div>
+
+                                <!-- define the canvas for the chart on the left side -->
+                                <div class="row">
+                                   <div class="col-6 p-2 m-2">
+                                     <canvas id="${id}" width="400" height="400"></canvas>
+                                   </div>
+
+                                   <!-- define the choosing elements for the chart on the right side -->
+                                    <div class="container col-4 p-2">
+
+                                     <label for="selectType_+${id}" class="float-left">type</label>
+                                     <select class="form-control m-2" id="selectType_${id}">
+                                      <option value="bar">Bar</option>
+                                      <option value="line">Line</option>
+                                     </select>
+                                     <label for="x_axis_+${id}" class="float-left">x-axis</label>
+                                     <select class="form-control m-2" id="x_axis_${id}"></select>
+                                     <label for="y_axis_+${id}" class="float-left">y-axis</label>
+                                     <select class="form-control m-2" id="y_axis_${id}"></select>
+                                     <button class="btn btn-danger p-2 m-2" onclick="ChartCreator('${id}', 'selectType_${id}', 'x_axis_${id}', 'y_axis_${id}')">Create</button>
+                                    </div>
+                                   </div>
+                               </div>
+                           </div>`
+
+            // append the graph box to the document
+            document.getElementById('GraphBox').insertAdjacentHTML('beforeend', markup);
+
+            // collect all the columns and add them to the axis drop boxes
+            column_mapper(id);
+
+
+        }
+    </script>
+
+    <!-- This Script actually creates the Graph based on Chart JS -->
+    <script type="text/javascript">
+    function ChartCreator(id_canvas, id_type, id_x, id_y) {
+
+      // choose the chart type based on drop box
+      var type_selection = document.getElementById(id_type);
+      var chart_type = type_selection.options[type_selection.selectedIndex].value;
+
+      // choose x-axis based on drop box
+      var x_axis_selection = document.getElementById(id_x);
+      var chart_x = x_axis_selection.options[x_axis_selection.selectedIndex].value;
+
+      // choose y-axis based on drop box
+      var y_axis_selection = document.getElementById(id_y);
+      var chart_y = y_axis_selection.options[y_axis_selection.selectedIndex].value;
+
+
+      var ctx = document.getElementById(id_canvas).getContext('2d');
+      var myChart = new Chart(ctx, {
+          type: chart_type,
+          data: {
+              // labels: [data[chart_x]],
+              datasets: [{
+                  label: '# of Votes',
+                  data: [data[chart_y]],
+                  backgroundColor: [
+                      'rgba(255, 99, 132, 0.2)',
+                      'rgba(54, 162, 235, 0.2)',
+                      'rgba(255, 206, 86, 0.2)',
+                      'rgba(75, 192, 192, 0.2)',
+                      'rgba(153, 102, 255, 0.2)',
+                      'rgba(255, 159, 64, 0.2)'
+                  ],
+                  borderColor: [
+                      'rgba(255, 99, 132, 1)',
+                      'rgba(54, 162, 235, 1)',
+                      'rgba(255, 206, 86, 1)',
+                      'rgba(75, 192, 192, 1)',
+                      'rgba(153, 102, 255, 1)',
+                      'rgba(255, 159, 64, 1)'
+                  ],
+                  borderWidth: 1
+              }]
+          },
+          options: {
+              scales: {
+                  yAxes: [{
+                      ticks: {
+                          beginAtZero: true
+                      }
+                  }]
+              }
+          }
+      });}
+    </script>
+
+    <!-- This Script reads a file -->
+    <script type="text/javascript">
+      function readTextFile(file){
+        var rawFile = new XMLHttpRequest();
+        rawFile.open("GET", file, false);
+        rawFile.onreadystatechange = function(){
+          if(rawFile.readyState===4){
+            if(rawFile.status === 200 || raw.File.status == 0){
+              var allText = rawFile.responseText;
+              alert(allText)
+            }
+          }
+        }
+        rawFile.send(null);
+      }
+    </script>
+
+    <!-- fetch api https://api.wheretheiss.at/v1/satellites/25544 -->
+    <script type="text/javascript">
+        async function api_call(){
+
+            // make the api call and replace input form with loader sign
+            const api_url = document.getElementById('api-url').value;
+            document.getElementById('loading_section').innerHTML = '<div id="loader" class="container col-10 mb-3 p-2 align-items-center float-center mx-auto"></div>';
+
+            const response = await fetch(api_url);
+            data = await response.json();
+            console.log(data);
+
+            // create verification msg
+            const verification_text = ' data from ' + api_url + ' was successfully loaded.'
+            var verification = `<div style="display:none; color:#e6205b" id="checkmark" class="container col-10 mb-3 p-2 align-items-center text-center animate-bottom">
+                                    <p><i class="fas fa-check-circle"></i>${verification_text}</p>
+                                </div>`
+
+            // insert msg and replace the loader sign
+            document.getElementById('loading_section').innerHTML = verification;
+            document.getElementById("checkmark").style.display = "block";
+        }
+    </script>
+
+    <!-- delete graph -->
+    <script type="text/javascript">
+      function delete_graph(id){
+        var element = document.getElementById("card_" + id);
+        element.parentNode.removeChild(element);
+        return false;
+      }
+    </script>
+
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+  </body>
+</html>
