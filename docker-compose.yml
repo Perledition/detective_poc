@@ -1,0 +1,9 @@
+version: '3.7'
+
+services:
+  data-service:
+    build: ./source
+    volumes:
+      - ./source:/user/src/app
+    ports:
+      - 5001:80
