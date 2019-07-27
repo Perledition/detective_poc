@@ -1,14 +1,11 @@
 # DataService
 # import pandas as pd
-import json
-from flask import Flask, jsonify, request, Response
-from flask_restful import Resource, Api
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 
 
 app = Flask(__name__)
 CORS(app)
-# api = Api(app)
 
 
 @app.route('/transform', methods=['GET', 'POST'])
@@ -16,12 +13,10 @@ def transform():
     data = {'Product': [1, 2, 4]}
     if request.method == 'GET':
         return jsonify(data)
+
     elif request.method == 'POST':
-        # content = request.json['Type']
-        resp = Response(request, status=200, mimetype='application/json')
-        return resp
-    else:
-        return jsonify({'Error': 'Method not allowed'})
+        data['Product-name'] = ['Franz', 'Meyer', 'Bauer']
+        return jsonify(data)
 
 
 if __name__ == '__main__':
