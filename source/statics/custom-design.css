@@ -152,5 +152,7 @@ a#addGraph:hover{
     background: #e6205b;
     color: #fff;
     padding: 5px;
+    margin: 5px;
+    width: auto;
     border-radius: 25px;
 }

@@ -230,7 +230,9 @@
             // insert msg and replace the loader sign
             document.getElementById('loading_section').innerHTML = verification;
             document.getElementById("checkmark").style.display = "block";
-        }
+            loadColumns();
+            listItems();
+        };
     </script>
 
     <!-- delete graph -->
@@ -327,36 +329,26 @@
     <div class="modal-content">
       <span class="close float-right">&times;</span>
       <h5>Which columns do you want to inspect?</h5>
+      <form id="search-columns">
+        <input type="text" placeholder="Search column...">
+      </form>
       <div class="row">
-        <div class="col-5">
-          <form id="search-columns">
-            <input type="text" placeholder="Search column...">
-          </form>
+        <div class="col-3">
           <ul id="columnMap">
-            <li class="selectable"><a onclick="AddColumn('Java')">Java</a></li>
-            <li class="selectable"><a onclick="AddColumn('Python')">Python</a></li>
-            <li class="selectable"><a onclick="AddColumn('C++')">C++</a></li>
-            <li class="selectable"><a onclick="AddColumn('Scala')">Scala</a></li>
           </ul>
         </div>
-        <div class="col-5">
+        <div class="col-3 align-middle"><i class="fas fa-caret-right fa-3x"></i></div>
+        <div class="col-3">
           <div id="TagContainer"></div>
         </div>
         <script type="text/javascript">
-          ColumnSearch('columnMap', 'search-columns')
+          ColumnSearch('columnMap', 'search-columns');
         </script>
-        <!-- <script>
-          // get the space where the columns will be inserted
-          var inputSpace = document.getElementById("ColumnSelection");
-
-          // get column names of the current data
-          var columnMap = Object.keys(data)
-
-          for (columnMap in data) {
-            optionHtml = '<option type="radio">' + columnMap + '</option>';
-            inputSpace.appendChild(optionHtml);
-          }
-        </script> -->
+      </div>
+      <div class="row">
+        <div class="container-fluid">
+          <button class="btn btn-outline-danger float-right m-2" onclick="#">Filter</button>
+        </div>
       </div>
     </div>
 

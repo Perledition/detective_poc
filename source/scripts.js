@@ -1,5 +1,6 @@
 // initialize array
 var pushList = [];
+var columnList;
 
 // Search Function -> Allows you to filter for a Column
 function ColumnSearch(div_id, searchBar){
@@ -37,7 +38,6 @@ function AddColumn(column) {
 
     // filter for the column name in the list
     pushList.push(column);
-    console.log(pushList);
 
     document.getElementById('TagContainer').innerHTML = '';
     for(i=0; i < pushList.length; i++) {
@@ -45,4 +45,35 @@ function AddColumn(column) {
         const tagHtml = `<div class="tag">` + value + `</div>`;
         document.getElementById('TagContainer').innerHTML += tagHtml;
     };
+
+    // get all elements form the list
+    const list = document.querySelector('#columnMap');
+    const columns = list.getElementsByTagName('li');
+
+    // if column is activated and in the list change display to none, since it cannot be selected anymore
+    Array.from(columns).forEach(function(col){
+        if(col.firstChild.innerHTML === column){
+           col.style.display = 'none';
+        }
+    });
+};
+
+// this function adds all values to the global variable for the column list
+function loadColumns(){
+    columnList = Object.keys(data);
+};
+
+// function to create list entries for all columns
+function listItems(){
+
+    // get all elements form the list
+    const columnMap = document.getElementById('columnMap');
+    var index = Object.keys(data);
+
+    // for object key in data add a list item
+    for (index in data){
+       const listTag = `<li class="selectable" onclick="AddColumn('${index}')"><a>${index}</a></li>`;
+       console.log(listTag);
+       columnMap.innerHTML += listTag;
+    }
 };
