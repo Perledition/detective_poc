@@ -6,99 +6,31 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
       <!-- reference your copy Font Awesome here (from our Kits or by hosting yourself) -->
     <script src="https://use.fontawesome.com/releases/v5.9.0/js/all.js" data-auto-replace-svg="nest"></script>
 
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
 
-    <!-- style for add Graph Button -->
-    <style>
-      a#addGraph{
-        border: none;
-        color: #ccc;
-        background-color: #fff;
-        text-color: #fff;
+    <!-- load custom designs -->
+    <link rel="stylesheet" type="text/css" href="statics/custom-design.css">
 
-      }
-
-      a#addGraph:hover{
-        color: #e6205b;
-      }
-    </style>
-
-    <!-- style for loader -->
-    <style>
-      /* Center the loader */
-      #loader {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        z-index: 1;
-        width: 150px;
-        height: 150px;
-        margin: -75px 0 0 -75px;
-        border: 6px solid #f3f3f3;
-        border-radius: 50%;
-        border-top: 6px solid #e6205b;
-        width: 15px;
-        height: 15px;
-        -webkit-animation: spin 2s linear infinite;
-        animation: spin 2s linear infinite;
-      }
-
-      @-webkit-keyframes spin {
-        0% { -webkit-transform: rotate(0deg); }
-        100% { -webkit-transform: rotate(360deg); }
-      }
-
-      @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-      }
-
-      /* Add animation to "page content" */
-      .animate-bottom {
-        position: relative;
-        -webkit-animation-name: animatebottom;
-        -webkit-animation-duration: 1s;
-        animation-name: animatebottom;
-        animation-duration: 1s
-      }
-
-      @-webkit-keyframes animatebottom {
-        from { bottom:-100px; opacity:0 }
-        to { bottom:0px; opacity:1 }
-      }
-
-      @keyframes animatebottom {
-        from{ bottom:-100px; opacity:0 }
-        to{ bottom:0; opacity:1 }
-      }
-
-      #myDiv {
-        display: none;
-      }
-    </style>
-
-    <!-- style for delete Button -->
-    <style>
-      #delete_btn{
-        color: #ccc;
-      }
-
-      #delete_btn:hover{
-        color: #e6205b;
-      }
-    </style>
+    <!-- custom scripts -->
+    <script type="text/javascript" src="scripts.js"></script>
 
     <title>detective</title>
   </head>
   <body>
+    <!-- headline Main Bar -->
     <h1 class="container-fluid float-center p-5 text-center" style="Comic Sans MS">
       <img src="/Users/maximperl/Downloads/aa33e306f062a5d1c587a6fa458bc4db--fingerprints-brand-identity.jpg" alt="Logo" width="100" height="80">
       detective</h1>
-    <div class="container-fluid align-items-center flex-column mb-3 p-2">
+
+    <!-- headline Main Body / Workspace -->
+    <div class="container-fluid align-items-center flex-column mb-3 p-2 text-center">
+
+      <!-- Data provisioning -->
       <div class="container input-group mb-3 p-2 align-items-center float-center mx-auto" id="loading_section">
         <input type="text" id="api-url" class="form-control" placeholder="api-url" aria-label="api url" aria-describedby="basic-addon2">
         <div class="input-group-append">
@@ -106,13 +38,22 @@
           <button class="btn btn-outline-secondary" type="button" onclick="_data()">Transform Data</button>
         </div>
       </div>
+
+      <!-- Graph Collection -->
       <div id="GraphBox" class="container col-10 mb-3 p-2 align-items-center float-center mx-auto"></div>
+
+      <!-- Edit Space -->
       <div class="container col-5 mb-3 p-2 align-items-center float-center mx-auto">
           <a class="row align-items-center text-center float-center" id="addGraph" onclick="GraphGenerator()">
             <span class="col" style="border: 2px solid; height:0;"></span>
               <i class="col fas fa-plus-circle"></i>
             <span class="col" style="border: 2px solid; height:0;"></span>
           </a>
+      </div>
+      <div class="container col-10 mb-3 p-2" id="FilterBox">
+        <button class="filter p-2" onclick="modal_activator('columnFilter', 'ColumnModal')" id="columnFilter"><i class="fas fa-filter"></i> Column Filter</button>
+        <button class="filter p-2"><i class="fas fa-less-than-equal"></i> Row Filter</button>
+        <button class="filter p-2"><i class="fas fa-table"></i> Display Table</button>
       </div>
     </div>
 
@@ -347,6 +288,79 @@
         .then(response => response.json()); // parses JSON response into native JavaScript objects
     }
     </script>
+
+    <!-- ModalActivation -->
+    <script>
+      function modal_activator(ButtonId, FilterName){
+
+        // Assign the document elements - you need the modal and the button
+        var modal = document.getElementById(FilterName);
+        var btn = document.getElementById(ButtonId);
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        // When the user clicks on the button, open the modal
+        btn.onclick = function() {
+          modal.style.display = "block";
+        }
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+          modal.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+          if (event.target == modal) {
+            modal.style.display = "none";
+          }
+        }
+
+      }
+    </script>
+
+  <!-- The Modal -->
+  <div id="ColumnModal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+      <span class="close float-right">&times;</span>
+      <h5>Which columns do you want to inspect?</h5>
+      <div class="row">
+        <div class="col-5">
+          <form id="search-columns">
+            <input type="text" placeholder="Search column...">
+          </form>
+          <ul id="columnMap">
+            <li class="selectable"><a onclick="AddColumn('Java')">Java</a></li>
+            <li class="selectable"><a onclick="AddColumn('Python')">Python</a></li>
+            <li class="selectable"><a onclick="AddColumn('C++')">C++</a></li>
+            <li class="selectable"><a onclick="AddColumn('Scala')">Scala</a></li>
+          </ul>
+        </div>
+        <div class="col-5">
+          <div id="TagContainer"></div>
+        </div>
+        <script type="text/javascript">
+          ColumnSearch('columnMap', 'search-columns')
+        </script>
+        <!-- <script>
+          // get the space where the columns will be inserted
+          var inputSpace = document.getElementById("ColumnSelection");
+
+          // get column names of the current data
+          var columnMap = Object.keys(data)
+
+          for (columnMap in data) {
+            optionHtml = '<option type="radio">' + columnMap + '</option>';
+            inputSpace.appendChild(optionHtml);
+          }
+        </script> -->
+      </div>
+    </div>
+
+  </div>
 
 
 
