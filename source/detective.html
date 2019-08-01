@@ -264,33 +264,6 @@
     }
     </script>
 
-    <!-- post data to dataTransformAPI -->
-    <script type="text/javascript">
-    // Example POST method implementation:
-    function _data() {
-
-        postData('http://localhost:5001/transform', {'Type': 'Hello World'})
-      .then(data => console.log(data)) // JSON-string from `response.json()` call
-      .catch(error => console.error(error));
-    }
-
-    function postData(url = '', data = {}) {
-      // Default options are marked with *
-        return fetch(url, {
-            method: 'POST', // *GET, POST, PUT, DELETE, etc.
-
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow', // manual, *follow, error
-            referrer: 'no-referrer', // no-referrer, *client
-            body: JSON.stringify(data), // body data type must match "Content-Type" header
-        })
-        .then(response => response.json()); // parses JSON response into native JavaScript objects
-    }
-    </script>
-
     <!-- ModalActivation -->
     <script>
       function modal_activator(ButtonId, FilterName){
@@ -347,7 +320,7 @@
       </div>
       <div class="row">
         <div class="container-fluid">
-          <button class="btn btn-outline-danger float-right m-2" onclick="#">Filter</button>
+          <button class="btn btn-outline-danger float-right m-2" onclick="ColumnFilter()">Filter</button>
         </div>
       </div>
     </div>
