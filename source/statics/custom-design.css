@@ -156,3 +156,15 @@ a#addGraph:hover{
     width: auto;
     border-radius: 25px;
 }
+
+/* menu buttons */
+.menu_btn{
+    float: right;
+    padding: 5px;
+    margin: 5px;
+
+}
+
+.menu_btn:hover{
+    color: #e6205b;
+}

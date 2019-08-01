@@ -23,6 +23,11 @@
   </head>
   <body>
     <!-- headline Main Bar -->
+    <div class="container-fluid p-2 m-2">
+      <a class="menu_btn"><i class="fas fa-user-cog"></i></a>
+      <a class="menu_btn"><i class="fas fa-file-pdf"></i></a>
+      <a class="menu_btn"><i class="fas fa-puzzle-piece"></i></a>
+    </div>
     <h1 class="container-fluid float-center p-5 text-center" style="Comic Sans MS">
       <img src="/Users/maximperl/Downloads/aa33e306f062a5d1c587a6fa458bc4db--fingerprints-brand-identity.jpg" alt="Logo" width="100" height="80">
       detective</h1>
@@ -35,7 +40,6 @@
         <input type="text" id="api-url" class="form-control" placeholder="api-url" aria-label="api url" aria-describedby="basic-addon2">
         <div class="input-group-append">
           <button class="btn btn-outline-danger" type="button" onclick="api_call()">Load Data</button>
-          <button class="btn btn-outline-secondary" type="button" onclick="_data()">Transform Data</button>
         </div>
       </div>
 
@@ -53,7 +57,7 @@
       <div class="container col-10 mb-3 p-2" id="FilterBox">
         <button class="filter p-2" onclick="modal_activator('columnFilter', 'ColumnModal')" id="columnFilter"><i class="fas fa-filter"></i> Column Filter</button>
         <button class="filter p-2"><i class="fas fa-less-than-equal"></i> Row Filter</button>
-        <button class="filter p-2"><i class="fas fa-table"></i> Display Table</button>
+        <button class="filter p-2" onclick="createTable()"><i class="fas fa-table"></i> Display Table</button>
       </div>
     </div>
 
@@ -242,26 +246,6 @@
         element.parentNode.removeChild(element);
         return false;
       }
-    </script>
-
-    <!-- post data to dataTransformAPI -->
-    <script type="text/javascript">
-    function send_data() {
-      var http = new XMLHttpRequest();
-      var url = 'http://127.0.0.1:5001';
-      var params = 'orem=ipsum&name=binny';
-      http.open('POST', url, true);
-
-      //Send the proper header information along with the request
-      http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-
-      http.onreadystatechange = function() {//Call a function when the state changes.
-          if(http.readyState == 4 && http.status == 200) {
-              alert(http.responseText);
-          }
-      }
-      http.send(params);
-    }
     </script>
 
     <!-- ModalActivation -->

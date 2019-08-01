@@ -114,36 +114,37 @@ function removeColumn(ele){
   createColumnTags('TagContainer');
 };
 
+// post data to the api backend
+function postData(url = '', content = {}) {
+  // Default options are marked with *
+    return fetch(url, {
+        method: 'POST', // *GET, POST, PUT, DELETE, etc.
+
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+        redirect: 'follow', // manual, *follow, error
+        referrer: 'no-referrer', // no-referrer, *client
+        body: JSON.stringify(content), // body data type must match "Content-Type" header
+    })
+    .then(response => response.json()); // parses JSON response into native JavaScript objects
+};
+
+// this function makes an simple api call to send the data to the api
+function _data(url, post_data) {
+   postData(url, post_data)
+  .then(content => data=content) // JSON-string from `response.json()` call
+  .catch(error => console.error(error));
+
+  //console.log(data);
+};
+
 // send filter options and data to the api to filter for all needed Columns
 function ColumnFilter(){
 
     backup = data;
-
-    // this function makes an simple api call to send the data to the api
-    function _data() {
-       postData('http://localhost:5001/transform', {columns: pushList, dataset:[data]})
-      .then(content => console.log(content)) // JSON-string from `response.json()` call
-      .catch(error => console.error(error));
-
-      //console.log(data);
-    }
-
-    function postData(url = '', content = {}) {
-      // Default options are marked with *
-        return fetch(url, {
-            method: 'POST', // *GET, POST, PUT, DELETE, etc.
-
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            redirect: 'follow', // manual, *follow, error
-            referrer: 'no-referrer', // no-referrer, *client
-            body: JSON.stringify(content), // body data type must match "Content-Type" header
-        })
-        .then(response => response.json()); // parses JSON response into native JavaScript objects
-    }
-    _data();
+    _data('http://localhost:5001/ColumnFilter', {columns: pushList, dataset:[data]});
     // create a new HTML element to show, that the loaded data set was was filtered
     var filterBox = `<div class="container mb-2 align-items-center text-center float-center">
                         <div class="card m-2 p-2 mx-auto align-items-center text-center">
@@ -164,3 +165,48 @@ function ColumnFilter(){
 
 };
 
+// generate id by generating a random number
+function randomGenerator(){
+    var id = '_' + Math.random().toString(36).substr(2, 9)
+    return id
+};
+
+// create an html table within the workspace of the current data
+function createTable(){
+
+    // Create a random id number
+    var randid = randomGenerator();
+
+    // Create a new Card element with an random id number
+    var TableBox = `<div class="container mb-2 align-items-center text-center float-center">
+                        <div class="card m-2 p-2 mx-auto align-items-center text-center" id="TableBox${randid}">
+                        </div>
+                     </div>`;
+    // add the TableBox to the GraphBox
+    document.getElementById('GraphBox').insertAdjacentHTML('beforeend', TableBox);
+
+
+    // create the table based on the current data im local drive
+    var perrow = 3, html = "<table><tr>";
+    console.log(data);
+    for(var i=0; i<data.length; i++) {
+    console.log(data[i]);
+        html += "<td>" + data[i] + "</td>";
+        var next = i + 1;
+        if (next%perrow==0 && next!=data.length){
+            html += "</tr><tr>";
+        }
+    }
+    html += "</tr></table>";
+    doc_id = "TableBox" + randid;
+    console.log(document.getElementById(doc_id));
+    document.getElementById(doc_id).innerHTML += html;
+};
+
+
+// convert the data to a usable json object
+function DataConverter(){
+
+    _data('http://localhost:5001/DataConverter', {data_set: data});
+
+};
