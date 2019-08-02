@@ -168,3 +168,13 @@ a#addGraph:hover{
 .menu_btn:hover{
     color: #e6205b;
 }
+
+.table{
+    overflow-x: hidden;
+}
+
+.thead.th{
+    background-color: #e6205b;
+    color: #fff;
+    font-style: normal;
+}

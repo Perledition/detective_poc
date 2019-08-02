@@ -178,8 +178,10 @@ function createTable(){
     var randid = randomGenerator();
 
     // Create a new Card element with an random id number
-    var TableBox = `<div class="container mb-2 align-items-center text-center float-center">
-                        <div class="card m-2 p-2 mx-auto align-items-center text-center" id="TableBox${randid}">
+    var TableBox = `<div class="container mb-2 align-items-center text-center float-center" id="card_${randid}">
+                        <div class="card m-2 p-2 mx-auto align-items-center text-center" id="TableBox${randid}" style="overflow-x: auto;">
+                         <!-- define delete icon -->
+                         <a class="float-right p-2" onclick="delete_graph('${randid}')" id="delete_btn"><i class="fas fa-times"></i></a>
                         </div>
                      </div>`;
     // add the TableBox to the GraphBox
@@ -187,20 +189,34 @@ function createTable(){
 
 
     // create the table based on the current data im local drive
-    var perrow = 3, html = "<table><tr>";
-    console.log(data);
-    for(var i=0; i<data.length; i++) {
-    console.log(data[i]);
-        html += "<td>" + data[i] + "</td>";
-        var next = i + 1;
-        if (next%perrow==0 && next!=data.length){
-            html += "</tr><tr>";
-        }
+    var html = "<table class='table'><thead class='thead'><tr>";
+
+    // add column names
+    for (column in data){
+        html += "<th scope='col'>" + column + "</th>";
     }
-    html += "</tr></table>";
+    html += "</tr></thead><tbody>";
+
+    // create sub function to create row entries
+    var len = Object.keys(data)[0].length;
+    for (var ix=0; ix<len; ix++){
+        html += "<tr>";
+        for (column in data){
+            html += "<th scope='row'>" + data[column][ix] + "</th>";
+        }
+        html += "</tr>";
+    }
+
+    html += "</tbody>";
+
+    // create all rows for each column
+
+
+
+    html += "</table>";
     doc_id = "TableBox" + randid;
-    console.log(document.getElementById(doc_id));
     document.getElementById(doc_id).innerHTML += html;
+    console.log(document.getElementById(doc_id));
 };
 
 
@@ -209,4 +225,11 @@ function DataConverter(){
 
     _data('http://localhost:5001/DataConverter', {data_set: data});
 
+};
+
+// delete a card from the GraphBox
+function delete_graph(id){
+    var element = document.getElementById("card_" + id);
+    element.parentNode.removeChild(element);
+    return false;
 };
