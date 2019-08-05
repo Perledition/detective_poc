@@ -2,6 +2,14 @@
 var pushList = [];
 var columnList;
 var backup;
+var colorMap = [
+    'rgba(255, 99, 132, 0.2)',
+    'rgba(54, 162, 235, 0.2)',
+    'rgba(255, 206, 86, 0.2)',
+    'rgba(75, 192, 192, 0.2)',
+    'rgba(153, 102, 255, 0.2)',
+    'rgba(255, 159, 64, 0.2)',
+    ];
 
 // Search Function -> Allows you to filter for a Column
 function ColumnSearch(div_id, searchBar){
@@ -232,4 +240,74 @@ function delete_graph(id){
     var element = document.getElementById("card_" + id);
     element.parentNode.removeChild(element);
     return false;
+};
+
+
+// This Function creates a Chart based on Chart.js and returns it to the document with the input id
+function ChartCreator(id_canvas, id_type, id_x, id_y) {
+
+    // remove chart if a chart exists
+    var myNode = document.getElementById('canvas_container' + id_canvas);
+    var new_canvas = document.createElement("canvas");
+    new_canvas.setAttribute("id", id_canvas);
+    new_canvas.setAttribute("width", "400");
+    new_canvas.setAttribute("height", "400");
+
+
+    console.log(new_canvas);
+    // var new_chart = `<canvas id="${id_canvas}" width="400" height="400"></canvas>`;
+
+    while(myNode.firstChild){
+        myNode.removeChild(myNode.firstChild);
+    }
+
+    myNode.appendChild(new_canvas);
+
+    // choose the chart type based on drop box
+    var type_selection = document.getElementById(id_type);
+    var chart_type = type_selection.options[type_selection.selectedIndex].value;
+
+    // choose x-axis based on drop box
+    var x_axis_selection = document.getElementById(id_x);
+    var chart_x = x_axis_selection.options[x_axis_selection.selectedIndex].value;
+
+    // choose y-axis based on drop box
+    var y_axis_selection = document.getElementById(id_y);
+    var chart_y = y_axis_selection.options[y_axis_selection.selectedIndex].value;
+
+
+    var ctx = document.querySelector('#' + id_canvas).getContext('2d');
+
+    // check for colors needed in colorMap since LineCharts needed a single
+    // non array value, while a BoxPlot needs the Array
+    if (chart_type == 'line'){
+        var color = colorMap[0];
+    }
+    else{
+        var color = colorMap;
+    }
+
+
+    var myChart = new Chart(ctx, {
+        type: chart_type,
+        data: {
+            labels: data[chart_x],
+            datasets: [{
+                //label: data[chart_x],
+                data: data[chart_y],
+                backgroundColor: color,
+                borderColor: color,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
 };
