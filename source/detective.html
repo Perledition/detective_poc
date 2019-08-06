@@ -24,9 +24,9 @@
   <body>
     <!-- headline Main Bar -->
     <div class="container-fluid p-2 m-2">
-      <a class="menu_btn"><i class="fas fa-user-cog"></i></a>
-      <a class="menu_btn"><i class="fas fa-file-pdf"></i></a>
-      <a class="menu_btn"><i class="fas fa-puzzle-piece"></i></a>
+      <button class="menu_btn"><i class="fas fa-user-cog"></i> Authentication</button>
+      <button class="menu_btn"><i class="fas fa-file-pdf"></i> Report</button>
+      <button class="menu_btn" id="preview_btn" onclick="modal_activator('preview_btn', 'PreviewModal')"><i class="fas fa-puzzle-piece"></i> Preview</button>
     </div>
     <h1 class="container-fluid float-center p-5 text-center" style="Comic Sans MS">
       <img src="/Users/maximperl/Downloads/aa33e306f062a5d1c587a6fa458bc4db--fingerprints-brand-identity.jpg" alt="Logo" width="100" height="80">
@@ -61,11 +61,6 @@
       </div>
     </div>
 
-
-    <!-- global variable -->
-    <script type="text/javascript">
-      var data;
-    </script>
 
     <!-- get all columns in data -->
     <script type="text/javascript">
@@ -180,6 +175,9 @@
             document.getElementById("checkmark").style.display = "block";
             loadColumns();
             listItems();
+            PreviewIngest();
+            document.getElementById("JSON-String-Container").innerHTML = JSON.stringify(data, undefined, 2);
+
         };
     </script>
 
@@ -214,37 +212,70 @@
       }
     </script>
 
-  <!-- The Modal -->
-  <div id="ColumnModal" class="modal">
+    <!-- The Modal -->
+    <div id="ColumnModal" class="modal">
 
-    <!-- Modal content -->
-    <div class="modal-content">
-      <span class="close float-right">&times;</span>
-      <h5>Which columns do you want to inspect?</h5>
-      <form id="search-columns">
-        <input type="text" placeholder="Search column...">
-      </form>
-      <div class="row">
-        <div class="col-3">
-          <ul id="columnMap">
-          </ul>
+      <!-- Modal content -->
+      <div class="modal-content">
+        <span class="close float-right">&times;</span>
+        <h5>Which columns do you want to inspect?</h5>
+        <form id="search-columns">
+          <input type="text" placeholder="Search column...">
+        </form>
+        <div class="row">
+          <div class="col-3">
+            <ul id="columnMap">
+            </ul>
+          </div>
+          <div class="col-3 align-middle"><i class="fas fa-caret-right fa-3x"></i></div>
+          <div class="col-3">
+            <div id="TagContainer"></div>
+          </div>
+          <script type="text/javascript">
+            ColumnSearch('columnMap', 'search-columns');
+          </script>
         </div>
-        <div class="col-3 align-middle"><i class="fas fa-caret-right fa-3x"></i></div>
-        <div class="col-3">
-          <div id="TagContainer"></div>
+        <div class="row">
+          <div class="container-fluid">
+            <button class="btn btn-outline-danger float-right m-2" onclick="ColumnFilter()">Filter</button>
+          </div>
         </div>
-        <script type="text/javascript">
-          ColumnSearch('columnMap', 'search-columns');
-        </script>
       </div>
-      <div class="row">
-        <div class="container-fluid">
-          <button class="btn btn-outline-danger float-right m-2" onclick="ColumnFilter()">Filter</button>
-        </div>
-      </div>
+
     </div>
 
-  </div>
+    <!-- Preview Model -->
+        <div id="PreviewModal" class="modal">
+
+      <!-- Modal content -->
+      <div class="modal-content">
+        <span class="close float-right">&times;</span>
+        <h5>Have a look at your Data in Json Format and Choose String</h5>
+        <div class="row">
+          <div class="container-fluid p-2"><pre id="JSON-String-Container"></pre></div>
+        </div>
+        <div class="row">
+          <div class="container-fluid">
+            <div class="dropdown">
+              <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">PreFilter</button>
+              <div class="dropdown-menu" id="preFilterList"></div>
+              <script type="text/javascript">
+                function PreviewIngest(){
+                  var dropdown = document.getElementById('preFilterList');
+
+                  for(index in columnList){
+                    var colHTML = document.createElement('a');
+                    colHTML.setAttribute('class', 'dropdown-item');
+                    colHTML.setAttribute('onclick', 'PreFilter("${columnList[index]}")');
+                    colHTML.innerHTML = columnList[index];
+                    dropdown.appendChild(colHTML);
+                  }
+                };
+              </script>
+            </div>
+          </div>
+        </div>
+      </div>
 
 
 

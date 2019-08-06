@@ -1,5 +1,6 @@
 // initialize array
 var pushList = [];
+var data;
 var columnList;
 var backup;
 var colorMap = [
@@ -187,10 +188,13 @@ function createTable(){
 
     // Create a new Card element with an random id number
     var TableBox = `<div class="container mb-2 align-items-center text-center float-center" id="card_${randid}">
-                        <div class="card m-2 p-2" id="TableBox${randid}">
-                            <!-- define delete icon -->
-                            <div class="container col-10 float-right">
-                                <a class="p-2" onclick="delete_graph('${randid}')" id="delete_btn"><i class="fas fa-times"></i></a>
+                        <div class="card m-2" id="TableBox${randid}">
+                            <div class="row">
+                              <div class="container-fluid">
+                                <div contenteditable="true" class="float-left m-2" style="text-family:arial; font-size: 1.5rem;">Enter a Headline</div>
+                                <!-- define delete icon -->
+                                <a class="float-right p-2" onclick="delete_graph('${randid}')" id="delete_btn"><i class="fas fa-times"></i></a>
+                              </div>
                             </div>
                             <div class="card-body" id="TableFrame${randid}" style="overflow-x: auto;"></div>
                         </div>
@@ -200,7 +204,7 @@ function createTable(){
 
 
     // create the table based on the current data im local drive
-    var html = "<table class='table'><thead class='thead thead-dark'><tr>";
+    var html = "<table class='table table-hover table-sm table-bordered'><thead class='thead thead-dark'><tr>";
 
     // add column names
     for (column in data){
@@ -213,7 +217,7 @@ function createTable(){
     for (var ix=0; ix<len; ix++){
         html += "<tr>";
         for (column in data){
-            html += "<th scope='row'>" + data[column][ix] + "</th>";
+            html += "<th scope='row' class='table_content'>" + data[column][ix] + "</th>";
         }
         html += "</tr>";
     }
@@ -304,4 +308,14 @@ function ChartCreator(id_canvas, id_type, id_x, id_y) {
             }
         }
     });
+};
+
+// does the pre filtering based on choosen input and sends the new data to be converted.
+function PreFilter(column){
+    console.log(column);
+    data = data[column];
+    DataConverter();
+    console.log(data);
+    ColumnSearch('columnMap', 'search-columns');
+    document.getElementById("JSON-String-Container").innerHTML = JSON.stringify(data, undefined, 2);
 };

@@ -158,11 +158,14 @@ a#addGraph:hover{
 }
 
 /* menu buttons */
+
 .menu_btn{
     float: right;
     padding: 5px;
     margin: 5px;
-
+    color: #ccc;
+    border: none;
+    background-color: #fff;
 }
 
 .menu_btn:hover{
@@ -177,4 +180,8 @@ a#addGraph:hover{
     background-color: #e6205b;
     color: #fff;
     font-style: normal;
+}
+
+.table-content{
+    font-size: 8px;
 }
