@@ -9,7 +9,7 @@ CORS(app)
 
 
 @app.route('/ColumnFilter', methods=['GET', 'POST'])
-def transform():
+def column_filter():
     data = {'Product': [1, 2, 4]}
     if request.method == 'GET':
         return jsonify(data)
@@ -27,7 +27,7 @@ def transform():
 
 
 @app.route('/DataConverter', methods=['POST'])
-def convert():
+def data_convert():
 
     if request.method == 'POST':
 
@@ -46,6 +46,24 @@ def convert():
 
         # return the new data configuration as a json object
         return jsonify(new_data)
+
+
+@app.route('/RowFilter', methods=['POST'])
+def row_filter():
+    if request.method == 'POST':
+
+        # get all filter combinations
+        filter_set = request.get_json()
+
+        # output e.g. ("index", ">", 5) this is needed to create dynamic filters in the next step
+        filter_set = list(zip(filter_set['columns'], filter_set['relationship'], filter_set['value']))
+
+        # create a query string for each pair in filter set
+        query = ' & '.join([f'({pair[0]}{pair[1]}{pair[2]})' for pair in filter_set])
+
+        # get the data set we want to filter, apply the query string and return the data set as json format
+        df = pd.DataFrame(filter_set['dataset'])
+        return jsonify(df.query(query).to_dict())
 
 
 if __name__ == '__main__':
