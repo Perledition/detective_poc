@@ -187,9 +187,12 @@ function createTable(){
 
     // Create a new Card element with an random id number
     var TableBox = `<div class="container mb-2 align-items-center text-center float-center" id="card_${randid}">
-                        <div class="card m-2 p-2 mx-auto align-items-center text-center" id="TableBox${randid}" style="overflow-x: auto;">
-                         <!-- define delete icon -->
-                         <a class="float-right p-2" onclick="delete_graph('${randid}')" id="delete_btn"><i class="fas fa-times"></i></a>
+                        <div class="card m-2 p-2" id="TableBox${randid}">
+                            <!-- define delete icon -->
+                            <div class="container col-10 float-right">
+                                <a class="p-2" onclick="delete_graph('${randid}')" id="delete_btn"><i class="fas fa-times"></i></a>
+                            </div>
+                            <div class="card-body" id="TableFrame${randid}" style="overflow-x: auto;"></div>
                         </div>
                      </div>`;
     // add the TableBox to the GraphBox
@@ -197,7 +200,7 @@ function createTable(){
 
 
     // create the table based on the current data im local drive
-    var html = "<table class='table'><thead class='thead'><tr>";
+    var html = "<table class='table'><thead class='thead thead-dark'><tr>";
 
     // add column names
     for (column in data){
@@ -215,18 +218,10 @@ function createTable(){
         html += "</tr>";
     }
 
-    html += "</tbody>";
-
-    // create all rows for each column
-
-
-
-    html += "</table>";
-    doc_id = "TableBox" + randid;
+    html += "</tbody></table>";
+    doc_id = "TableFrame" + randid;
     document.getElementById(doc_id).innerHTML += html;
-    console.log(document.getElementById(doc_id));
 };
-
 
 // convert the data to a usable json object
 function DataConverter(){
@@ -241,7 +236,6 @@ function delete_graph(id){
     element.parentNode.removeChild(element);
     return false;
 };
-
 
 // This Function creates a Chart based on Chart.js and returns it to the document with the input id
 function ChartCreator(id_canvas, id_type, id_x, id_y) {
