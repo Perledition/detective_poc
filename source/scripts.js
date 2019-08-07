@@ -312,10 +312,8 @@ function ChartCreator(id_canvas, id_type, id_x, id_y) {
 
 // does the pre filtering based on choosen input and sends the new data to be converted.
 function PreFilter(column){
-    console.log(column);
     data = data[column];
     DataConverter();
-    console.log(data);
     ColumnSearch('columnMap', 'search-columns');
     document.getElementById("JSON-String-Container").innerHTML = JSON.stringify(data, undefined, 2);
 };

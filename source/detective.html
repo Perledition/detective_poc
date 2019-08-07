@@ -248,11 +248,11 @@
         <div id="PreviewModal" class="modal">
 
       <!-- Modal content -->
-      <div class="modal-content">
+      <div class="modal-content" style="height: 50%;">
         <span class="close float-right">&times;</span>
         <h5>Have a look at your Data in Json Format and Choose String</h5>
-        <div class="row">
-          <div class="container-fluid p-2"><pre id="JSON-String-Container"></pre></div>
+        <div class="row" style="overflow-y: scroll;">
+          <div class="container-fluid p-2"><pre id="JSON-String-Container" style="overflow-y: scroll;"></pre></div>
         </div>
         <div class="row">
           <div class="container-fluid">
@@ -266,7 +266,7 @@
                   for(index in columnList){
                     var colHTML = document.createElement('a');
                     colHTML.setAttribute('class', 'dropdown-item');
-                    colHTML.setAttribute('onclick', 'PreFilter("${columnList[index]}")');
+                    colHTML.setAttribute('onclick', 'PreFilter("' + columnList[index] + '")');
                     colHTML.innerHTML = columnList[index];
                     dropdown.appendChild(colHTML);
                   }
