@@ -66,7 +66,17 @@ function AddColumn(column) {
 
 // this function adds all values to the global variable for the column list
 function loadColumns(){
-    columnList = Object.keys(data);
+    columnList = DictInDict(data);
+};
+
+// This function checks weather the data is a array of data points or has string keys
+function DictInDict(arr){
+     if (parseInt(Object.keys(arr)[0]) == 0){
+        return Object.keys(data[0]);
+    }
+    else{
+         return Object.keys(data);
+    };
 };
 
 // creates all Tags for the column selections
@@ -91,15 +101,24 @@ function createColumnTags(element_id, remover='True'){
 // function to create list entries for all columns
 function listItems(){
 
-    // get all elements form the list
-    const columnMap = document.getElementById('columnMap');
-    var index = Object.keys(data);
+    function iteration(element, c_list){
+         // for object key in data add a list item
+        for (index in c_list){
+                const listTag = `<li class="selectable" onclick="AddColumn('${c_list[index]}')"><a>${c_list[index]}</a></li>`;
+                element.innerHTML += listTag;
+        };
+    };
 
-    // for object key in data add a list item
-    for (index in data){
-       const listTag = `<li class="selectable" onclick="AddColumn('${index}')"><a>${index}</a></li>`;
-       columnMap.innerHTML += listTag;
-    }
+    // get all elements form the list
+    var liColumns = document.getElementById('columnMap');
+    const columnMap = document.getElementById('columnMap');
+
+    while( liColumns.firstChild ) {
+            liColumns.removeChild(liColumns.firstChild);
+    };
+
+    var index = DictInDict(data);
+    iteration(columnMap, index);
 };
 
 // removes an element from the selection list (TagContainer)
@@ -157,9 +176,11 @@ function ColumnFilter(){
     // create a new HTML element to show, that the loaded data set was was filtered
     var filterBox = `<div class="container mb-2 align-items-center text-center float-center">
                         <div class="card m-2 p-2 mx-auto align-items-center text-center">
-                            <div class="row p-2">
-                                <p>DataSet was filtered to columns: </p>
-                                <div class="row p-2" id="filterTags"></div>
+                            <div class="row mx-auto align-items-center text-center">
+                                <div class="col float-left">
+                                    <p class="m-2 p-2">DataSet was filtered to columns: </p>
+                                </div>
+                                <div col="col-6"><div class="row" id="filterTags"></div></div>
                             </div>
                         </div>
                      </div>`;
@@ -313,7 +334,12 @@ function ChartCreator(id_canvas, id_type, id_x, id_y) {
 // does the pre filtering based on choosen input and sends the new data to be converted.
 function PreFilter(column){
     data = data[column];
-    DataConverter();
-    ColumnSearch('columnMap', 'search-columns');
+
+    async function change(){
+        var waitForIt = await DataConverter();
+
+    };
+    change();
+    listItems();
     document.getElementById("JSON-String-Container").innerHTML = JSON.stringify(data, undefined, 2);
 };

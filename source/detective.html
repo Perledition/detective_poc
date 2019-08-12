@@ -67,16 +67,16 @@
       function column_mapper(id_number){
 
         // variables to reach the columns
-        var index = Object.keys(data);
+          var ColumnSet = DictInDict(data);
 
-        // drop downs to request
-        var x_select = document.getElementById("x_axis_"+id_number);
-        var y_select = document.getElementById("y_axis_"+id_number);
+          // drop downs to request
+          var x_select = document.getElementById("x_axis_"+id_number);
+          var y_select = document.getElementById("y_axis_"+id_number);
 
-        // append option to drop down based on data keys
-        for (index in data) {
-          x_select.options[x_select.options.length] = new Option(index, index);
-          y_select.options[y_select.options.length] = new Option(index, index);
+          // append option to drop down based on data keys
+          for (column in ColumnSet) {
+            x_select.options[x_select.options.length] = new Option(ColumnSet[column], ColumnSet[column]);
+            y_select.options[y_select.options.length] = new Option(ColumnSet[column], ColumnSet[column]);
         }
       }
     </script>
@@ -215,10 +215,18 @@
     <!-- The Modal -->
     <div id="ColumnModal" class="modal">
 
+
       <!-- Modal content -->
       <div class="modal-content">
-        <span class="close float-right">&times;</span>
-        <h5>Which columns do you want to inspect?</h5>
+        <div class="container-fluid align-items-center text-center float-center">
+          <div class="row">
+            <div class="container-fluid text-center">
+              <h5>Which columns do you want to inspect?</h5>
+              <!-- define delete icon -->
+              <a class="close float-right"><i class="fas fa-times"></i></a>
+            </div>
+          </div>
+        </div>
         <form id="search-columns">
           <input type="text" placeholder="Search column...">
         </form>
@@ -245,37 +253,38 @@
     </div>
 
     <!-- Preview Model -->
-        <div id="PreviewModal" class="modal">
+    <div id="PreviewModal" class="modal">
 
       <!-- Modal content -->
       <div class="modal-content" style="height: 50%;">
-        <span class="close float-right">&times;</span>
-        <h5>Have a look at your Data in Json Format and Choose String</h5>
-        <div class="row" style="overflow-y: scroll;">
-          <div class="container-fluid p-2"><pre id="JSON-String-Container" style="overflow-y: scroll;"></pre></div>
-        </div>
-        <div class="row">
-          <div class="container-fluid">
-            <div class="dropdown">
-              <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">PreFilter</button>
-              <div class="dropdown-menu" id="preFilterList"></div>
-              <script type="text/javascript">
-                function PreviewIngest(){
-                  var dropdown = document.getElementById('preFilterList');
+          <span class="close float-right">&times;</span>
+          <h5>Have a look at your Data in Json Format and Choose String</h5>
+          <div class="row" style="overflow-y: scroll;">
+            <div class="container-fluid p-2"><pre id="JSON-String-Container" style="overflow-y: scroll;"></pre></div>
+          </div>
+          <div class="row">
+            <div class="container-fluid">
+              <div class="dropdown">
+                <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown">PreFilter</button>
+                <div class="dropdown-menu" id="preFilterList"></div>
+                <script type="text/javascript">
+                  function PreviewIngest(){
+                    var dropdown = document.getElementById('preFilterList');
 
-                  for(index in columnList){
-                    var colHTML = document.createElement('a');
-                    colHTML.setAttribute('class', 'dropdown-item');
-                    colHTML.setAttribute('onclick', 'PreFilter("' + columnList[index] + '")');
-                    colHTML.innerHTML = columnList[index];
-                    dropdown.appendChild(colHTML);
-                  }
-                };
-              </script>
+                    for(index in columnList){
+                      var colHTML = document.createElement('a');
+                      colHTML.setAttribute('class', 'dropdown-item');
+                      colHTML.setAttribute('onclick', 'PreFilter("' + columnList[index] + '")');
+                      colHTML.innerHTML = columnList[index];
+                      dropdown.appendChild(colHTML);
+                    }
+                  };
+                </script>
+              </div>
             </div>
           </div>
-        </div>
       </div>
+    </div>
 
 
 

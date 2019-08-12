@@ -111,10 +111,9 @@ a#addGraph:hover{
 
 /* The Close Button */
 .close {
-  color: #aaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
+  font-size: 12px;
+  align: top;
+  color: #ccc;
 }
 
 .close:hover,
@@ -154,7 +153,14 @@ a#addGraph:hover{
     padding: 5px;
     margin: 5px;
     width: auto;
-    border-radius: 25px;
+    border-radius: 5px;
+}
+
+.filter-text{
+    padding: 5px;
+    margin: 5px;
+    width: auto;
+    align: center;
 }
 
 /* menu buttons */
